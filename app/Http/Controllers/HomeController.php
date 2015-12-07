@@ -1,0 +1,318 @@
+<?php
+
+namespace App\Http\Controllers;
+use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Model;
+use App\products;
+use App\productPictures;
+use Cart;
+use Auth;
+use Illuminate\Http\Request;
+use App\purchaseorder;
+use App\orders;
+
+use Hash;
+use App\User;
+use DateTime;
+class HomeController extends Controller{
+	public function getIndex(){
+		$data['cartQuantity'] = 0;
+		$data['products'] = products::orderBy('id','desc')->paginate(6);
+		return view('home', $data);
+	}
+	public function getFoodService(){
+		$data['products'] = products::where('category_id',1)->paginate(6);
+		$data['title'] = "Food service";
+		return view('mainlayout', $data);
+	}
+	public function getCookingEquipment(){
+		$data['products'] = products::where('category_id',2)->paginate(6);
+		$data['title'] = "Cooking equipment";
+		return view('mainlayout', $data);
+	}
+	public function getStorageAndPreparationEquipment(){
+		$data['products'] = products::where('category_id',3)->paginate(6);
+		$data['title'] = "Storage and preparation equipments";
+		return view('mainlayout', $data);
+	}
+	public function getItemDescription($id){
+		$data['product'] = products::find($id);
+		$data['productPictures'] = productPictures::where('product_id',$id)->get();
+		return view('single', $data);
+	}
+	public function postItemDescription($id){
+		$data['product'] = products::find($id);
+		$data['productPictures'] = productPictures::where('product_id',$id)->get();
+		if(isset($_POST['addtocart'])){
+			Cart::add(
+				[
+				'id' =>$data['product']->id, 
+				'name' => $data['product']->productName,
+				'price' => $data['product']->sellingprice,
+				'quantity' => 1, 
+				'attributes' => array()
+				]
+				);
+			return redirect('/mycart');
+		}
+		return view('single', $data);
+	}
+	public function getMyCart(){
+		
+		return view('mycart');
+	}
+	public function postMyCart(){
+		if(isset($_POST['btnRemoveFromCart'])){
+			Cart::remove($_POST['product_id']);
+		}
+
+		return view('mycart');
+	}
+	public function postCheckout(Request $request){
+		
+		if(Auth::check()){
+			return $this->getCheckoutFinal($request);
+		}
+		return view('checkout');
+	}
+
+	public function getCheckoutFinal(Request $request){
+		if(Cart::isEmpty()){
+			return redirect('/home');
+		}
+		$data['name'] = (Auth::check()) ? Auth::user()->name : $request->name;
+		$data['address'] = (Auth::check()) ? Auth::user()->customer_address : $request->address;
+		$data['mobile'] =  (Auth::check()) ? Auth::user()->mobileNumber : $request->mobile;
+		$data['email'] =  (Auth::check()) ? Auth::user()->email : $request->email;
+		$orders = [];
+		$items = Cart::getContent();
+		if(isset($_POST['placeorder'])){
+			$purchaseOrder = new purchaseorder();
+			$purchaseOrder->customer_name = $data['name'];
+			$purchaseOrder->customer_mobile = $data['mobile'];
+			$purchaseOrder->customer_address = $data['address'];
+			$purchaseOrder->customer_email = $data['email'];
+			$purchaseOrder->status = "pending";
+			$deadline = strtotime("+7 day");
+			$purchaseOrder->deadline = date('Y-m-d', $deadline);
+			if(Auth::check()){
+				$purchaseOrder->user_id = Auth::user()->id;
+			}
+			$purchaseOrder->save();
+
+			$items = Cart::getContent();
+			foreach($items as $item){
+				$order = new orders();
+					$product = products::find($item->id);
+					$sellingprice = $product->sellingprice;
+					$amount = $item->quantity * $sellingprice;
+					
+				$order->purchaseorders_id = $purchaseOrder->id;
+				$order->productName = $item->name;
+				$order->quantity = $item->quantity;
+				$order->amount = $amount;
+				
+
+				$order->save();
+			}
+			Cart::clear();
+			if(Auth::check()){
+				return redirect("/myorders")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+			}
+
+			return redirect("/")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+			
+		}
+		
+
+		$data['orders'] = $items;
+		return view('checkoutreview', $data);
+	}
+	public function postCheckoutFinal(Request $request){
+		$data['name'] = (Auth::check()) ? Auth::user()->customer_name : $request->name;
+		$data['address'] = (Auth::check()) ? Auth::user()->customer_address : $request->address;
+		$data['mobile'] =  (Auth::check()) ? Auth::user()->mobileNumber : $request->mobile;
+		$data['email'] =  (Auth::check()) ? Auth::user()->email : $request->email;
+		$orders = [];
+		$items = Cart::getContent();
+		if(isset($_POST['placeorder'])){
+			$purchaseOrder = new purchaseorder();
+			$purchaseOrder->customer_name = $data['name'];
+			$purchaseOrder->customer_mobile = $data['mobile'];
+			$purchaseOrder->customer_address = $data['address'];
+			$purchaseOrder->customer_email = $data['email'];
+			$purchaseOrder->status = "pending";
+			$deadline = strtotime("+7 day");
+			$purchaseOrder->deadline = date('Y-m-d', $deadline);
+			$purchaseOrder->save();
+
+			$items = Cart::getContent();
+			foreach($items as $item){
+				$order = new orders();
+					$product = products::find($item->id);
+					$sellingprice = $product->sellingprice;
+					$amount = $item->quantity * $sellingprice;
+					
+				$order->purchaseorders_id = $purchaseOrder->id;
+				$order->productName = $item->name;
+				$order->quantity = $item->quantity;
+				$order->amount = $amount;
+				if(Auth::check()){
+					$order->user_id = Auth::user()->id;
+				}
+
+				$order->save();
+			}
+			Cart::clear();
+			if(Auth::check()){
+				return redirect("/myaccount")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+			}
+
+			return redirect("/")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+			
+		}
+		
+
+		$data['orders'] = $items;
+		return view('checkoutreview', $data);
+	}
+	public function getMyAccount(){
+		$data['error'] = "";
+		$data['user'] = Auth::user();
+		return view('myaccount', $data);
+	}
+	public function getRegister(){
+		if(Auth::check()){
+			return redirect('/myaccount');
+		}
+		$data['error'] = "";
+		$data['user'] = "";
+		return view('auth.register', $data);
+	}
+	public function postRegister(Request $request){
+		if(isset($_POST['register'])){
+
+			$user = new User();
+			$user->name = $request->name;
+			$user->mobileNumber = $request->mobilenumber;
+			$user->email = $request->email;
+			$user->customer_address = $request->address;
+			$user->password = bcrypt($request->password);
+			if($request->password != $request->retypePassword){
+				return redirect('/auth/register')->with('error', 'Passwords must match');
+			}
+			$user->save();
+			return redirect('myaccount')->with('affirmRegistration', 'Successfully registered. Please login to continue');;
+		}
+	}
+	public function postMyAccount(Request $request){
+
+		$error = "";
+		
+		$user = Auth::user();
+		
+		if(isset($_POST['save'])){
+			
+			$user->name = $request->username;
+			
+			$user->mobileNumber = $request->mobilenumber;
+			$user->email = $request->email;
+			$user->customer_address = $request->address;
+			$user->save();
+			$_SESSION['affirm'] = "User profile saved successfully!";
+
+		}
+		if(isset($_POST['changepassword'])){
+			if(trim($request->oldpassword) == ''){
+				$error = "old password can't be blank";
+			}
+			elseif(trim($request->newpassword) == '')
+			{
+				$error = "new password can't be blank";
+			
+			}
+			else{
+				if(isset($_POST['changepassword'])){
+					if(Hash::check($request->oldpassword, $user->password) == false){
+						$error ="Change password failed. Wrong input of old password.";
+						//$2y$10$TliCsgcgCs7QKW/Trn1WruWc7LFGc8Ek.yDlh389d4r7PbBQVN1QO
+
+					}else{
+						if($request->newpassword != $request->confirmnewpassword){
+							$error ="Change password failed. Passwords must match";
+						}else{
+							$user->password = bcrypt($request->newpassword);
+							$user->save();
+							$_SESSION['affirm'] = "Password successfully changed.";
+						}
+					}
+				}
+			}
+		}
+		$data['user'] = $user;
+
+		$data['error'] = $error;
+		return view('myaccount', $data);
+	}
+	public function getMyOrders(){
+		$data['purchaseorders'] = purchaseorder::where('user_id', Auth::user()->id)->get();
+		return view('myorders', $data);
+	}
+
+	public function getOrder($id){
+		$match = [
+			'purchaseorders_id' => $id,
+		];
+		$data['orders'] = orders::where($match)->get();
+		$data['total'] = $data['orders']->sum('amount');
+		$data['totalquantity'] = orders::where('purchaseorders_id',$id)->count();
+		$purchaseorder = purchaseorder::find($id);
+		if($purchaseorder->user_id != Auth::user()->id){
+			return redirect("/home");
+		}
+		$data['purchaseOrder'] = $purchaseorder;
+		$status = "";
+		switch($data['purchaseOrder']->status){
+			case "pending":
+				$status = "<b style = 'color:orange'>pending</b>";
+				
+			break;
+			case "cancelled":
+				$status = "<b style = 'color:orange'>cancelled</b>";
+				
+			break;
+			case "on-delivery-process":
+				$status = "<b style = 'color:green'>on-delivery-process</b>";
+				
+			break;
+			case "closed":
+				$status = "<b style = 'color:green'>closed</b>";
+				
+			break;
+		}
+		$data['status'] = $status;
+$deadlineColor = "black";
+if($purchaseorder->status == "pending" || $purchaseorder->status == "on-delivery-process"){
+
+		$datetime1 = new DateTime(date("Y-m-d"));
+		$datetime2 = new DateTime($purchaseorder->deadline);
+		$interval = $datetime1->diff($datetime2);
+		$days =$interval->days;
+
+
+		if($days < 3){
+			$deadlineColor = "red";
+		}else if($days < 5){
+			$deadlineColor = "orange";
+
+		}
+		else if($days == 7){
+			$deadlineColor = "green";
+
+		}
+}
+		$data['deadlineColor'] = $deadlineColor;
+		return view('orderdetails', $data);
+	}
+}
+?>
