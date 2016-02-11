@@ -73,6 +73,8 @@ class HomeController extends Controller{
 		if(Auth::check()){
 			return $this->getCheckoutFinal($request);
 		}
+
+		
 		return view('checkout');
 	}
 
@@ -129,7 +131,33 @@ class HomeController extends Controller{
 		return view('checkoutreview', $data);
 	}
 	public function postCheckoutFinal(Request $request){
-		$data['name'] = (Auth::check()) ? Auth::user()->customer_name : $request->name;
+		if(isset($_POST['LoginAndCheckout'])){
+			 if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            	// Authentication passed...
+            	//return redirect()->intended('review');
+    		} else{
+        		return redirect("/checkout")->with("authentication failed");
+    		}
+		}
+		if(isset($_POST['RegisterAccountcheckout'])){
+			$user = new User();
+			$user->lastname = $request->lastname;
+			$user->firstname = $request->firstname;
+			$user->middleName = $request->middlename;
+			$user->email = $request->email;
+			$user->customer_address = $request->address;
+			$user->name = $request->username;
+			$user->password = bcrypt($request->password);
+			$user->save();
+
+			if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
+            	// Authentication passed...
+            	//return redirect()->intended('review');
+    		} else{
+        		return redirect("/checkout")->with("authentication failed");
+    		}
+		}
+		$data['name'] = (Auth::check()) ? Auth::user()->firstname . " " . Auth::user()->lastname : $request->name;
 		$data['address'] = (Auth::check()) ? Auth::user()->customer_address : $request->address;
 		$data['mobile'] =  (Auth::check()) ? Auth::user()->mobileNumber : $request->mobile;
 		$data['email'] =  (Auth::check()) ? Auth::user()->email : $request->email;
@@ -144,6 +172,9 @@ class HomeController extends Controller{
 			$purchaseOrder->status = "pending";
 			$deadline = strtotime("+7 day");
 			$purchaseOrder->deadline = date('Y-m-d', $deadline);
+			if(Auth::check()){
+					$purchaseOrder->user_id = Auth::user()->id;
+				}
 			$purchaseOrder->save();
 
 			$items = Cart::getContent();
@@ -157,9 +188,7 @@ class HomeController extends Controller{
 				$order->productName = $item->name;
 				$order->quantity = $item->quantity;
 				$order->amount = $amount;
-				if(Auth::check()){
-					$order->user_id = Auth::user()->id;
-				}
+				
 
 				$order->save();
 			}
@@ -214,7 +243,9 @@ class HomeController extends Controller{
 		if(isset($_POST['save'])){
 			
 			$user->name = $request->username;
-			
+			$user->lastname = $request->lastname;
+			$user->firstname = $request->firstname;
+			$user->middlename = $request->middlename;
 			$user->mobileNumber = $request->mobilenumber;
 			$user->email = $request->email;
 			$user->customer_address = $request->address;

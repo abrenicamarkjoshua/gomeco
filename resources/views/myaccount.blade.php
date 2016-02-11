@@ -24,11 +24,25 @@
     	
     	
         <div class="pure-control-group">
-            <label for="name">Name:</label>
+            <label for="name">User name:</label>
             
             <input required type = 'text' name = 'username' value = '{{$user->name}}'/>
         </div>
-        
+         <div class="pure-control-group">
+            <label for="name">Last name:</label>
+            
+            <input required type = 'text' name = 'lastname' value = '{{$user->lastname}}'/>
+        </div> 
+        <div class="pure-control-group">
+            <label for="name">First name:</label>
+            
+            <input required type = 'text' name = 'firstname' value = '{{$user->firstname}}'/>
+        </div>
+        <div class="pure-control-group">
+            <label for="name">Middle name:</label>
+            
+            <input required type = 'text' name = 'middlename' value = '{{$user->middlename}}'/>
+        </div>
  		<div class="pure-control-group">
             <label for="name">Mobile number:</label>
             <input required class = "pure-input-1-3"  name = "mobilenumber" type="number" placeholder="mobile number" value = '{{$user->mobileNumber}}'>

@@ -39,8 +39,8 @@
 			
 
 			<div class="pure-control-group">
-	            <label for="name">email:</label>
-	            <input class = "pure-input-1-3" id="name" type="email" required placeholder="email" />
+	            <label for="name">Email:</label>
+	            <input class = "pure-input-1-3" id="name" type="email" name = 'email' required placeholder="email" />
         	</div>
         	<div class="pure-control-group">
 	            <label for="name">password:</label>
@@ -57,12 +57,15 @@
 	<fieldset>
 		<legend>Create account and continue checkout</legend>
 		<form action = '../review' method = 'post' class="pure-form pure-form-aligned">
-			{!! csrf_field() !!}
-			
+			{!! csrf_field() !!}			
 
 			<div class="pure-control-group">
-	            <label for="name">email:</label>
-	            <input class = "pure-input-1-3" id="name" type="email" required placeholder="email" />
+	            <label for="name">User name:</label>
+	            <input class = "pure-input-1-3" id="usernamename" type="text" required placeholder="username" name = "username"/>
+        	</div>
+			<div class="pure-control-group">
+	            <label for="name">Email:</label>
+	            <input class = "pure-input-1-3" id="name" type="email" required placeholder="email" name = 'email'/>
         	</div>
         	<div class="pure-control-group">
 	            <label for="name">password:</label>
@@ -74,8 +77,12 @@
         	</div>
 
 	        <div class="pure-control-group">
-	            <label>First & Last name:</label>
-	            <input class = "pure-input-1-3" type = 'text' name = 'name' required placeholder ='complete name' />
+	            <label>Last name:</label>
+	            <input class = "pure-input-1-3" type = 'text' name = 'lastname' required placeholder ='last name' />
+	        </div>
+	         <div class="pure-control-group">
+	            <label>First name:</label>
+	            <input class = "pure-input-1-3" type = 'text' name = 'firstname' required placeholder ='First name' />
 	        </div>
 	         <div class="pure-control-group">
 	            <label>Complete address:</label>

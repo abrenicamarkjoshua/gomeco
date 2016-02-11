@@ -14,10 +14,11 @@
     	
     	
         <div class="pure-control-group">
-            <label for="name">Name:</label>
+            <label for="name">User name:</label>
             
             <input required type = 'text' name = 'name' />
         </div>
+
         <div class="pure-control-group">
             <label for="name">Password:</label>
             <input required class = "pure-input-1-3"  name = "password" type="password"  />
@@ -25,6 +26,21 @@
         <div class="pure-control-group">
             <label for="name">Retype Password:</label>
             <input required class = "pure-input-1-3"  name = "retypePassword" type="password"  />
+        </div>
+         <div class="pure-control-group">
+            <label for="name">Last name:</label>
+            
+            <input required type = 'text' name = 'lastname' />
+        </div>
+         <div class="pure-control-group">
+            <label for="name">First name:</label>
+            
+            <input required type = 'text' name = 'firstname' />
+        </div>
+         <div class="pure-control-group">
+            <label for="name">Middle name:</label>
+            
+            <input required type = 'text' name = 'middlename' />
         </div>
  		<div class="pure-control-group">
             <label for="name">Mobile number:</label>

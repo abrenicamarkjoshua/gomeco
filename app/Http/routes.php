@@ -68,6 +68,9 @@ $uses = (Auth::Check()) ? 'HomeController@postCheckoutFinal': 'HomeController@po
 Route::post('/checkout',[
 	'uses' => $uses
 	]);
+Route::get('/checkout',[
+	'uses' => $uses
+	]);
 Route::post('/review',[
 	'uses' => 'HomeController@postCheckoutFinal'
 	]);

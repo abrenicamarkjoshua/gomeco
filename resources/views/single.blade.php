@@ -141,7 +141,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <div class="mens">    
   <div class="main">
      <div class="wrap">
-     	<ul class="breadcrumb breadcrumb__t"><a class="home" href="#">Home</a> / <a href="#">Dolor sit amet</a> / Lorem ipsum dolor sit amet</ul>
+     	
 		<div class="cont span_2_of_3">
 		  	<div class="grid images_3_of_2">
 						<div id="container">
