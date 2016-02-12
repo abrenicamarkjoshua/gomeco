@@ -95,4 +95,8 @@ Route::get('/order/{id}', [
 	'middleware' => 'auth',
 	'uses' => 'HomeController@getOrder'
 ]);
+Route::post('/order/{id}', [
+	'middleware' => 'auth',
+	'uses' => 'HomeController@postOrder'
+]);
 ?>

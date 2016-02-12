@@ -31,7 +31,14 @@
             @if($purchaseOrder->status == "pending" || $purchaseOrder->status == "on-delivery-process")
             Deadline: <b style = "color:{{$deadlineColor}}">{!! $purchaseOrder->deadline !!}</b><br>
             @endif
-            Status: {!! $status !!}
+            Status: {!! $purchaseOrder->status !!}
+            @if($purchaseOrder->status == "pending")
+            <form action = '' method = 'post'>
+                {!! csrf_field() !!}
+                <input type = 'submit' name = 'btnCancelOrder' value = 'cancel order'/>
+                
+            </form>
+            @endif
         </div>
         
     </fieldset>

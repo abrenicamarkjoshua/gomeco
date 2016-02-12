@@ -289,7 +289,15 @@ class HomeController extends Controller{
 		$data['purchaseorders'] = purchaseorder::where('user_id', Auth::user()->id)->get();
 		return view('myorders', $data);
 	}
+	public function postOrder($id){
+		if(isset($_POST['btnCancelOrder'])){
+			$order = purchaseorder::where('user_id', Auth::user()->id)->where('id', $id)->first();
+			$order->status = "cancelled";
+			$order->save();
+			return redirect("/order/$id")->with('message', "Order was cancelled");
+		}
 
+	}
 	public function getOrder($id){
 		$match = [
 			'purchaseorders_id' => $id,
