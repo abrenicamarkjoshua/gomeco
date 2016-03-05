@@ -81,20 +81,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					</div>
 				</li>				
 				<li><a class="color6" href="/aboutUs">About Us</a></li>
-                <li><a class="color6" href="#">Contact Us</a>
-                 <div class="megapanel">
-					<div class="row">
-						<div class="col1">
-							<div class="h_nav">
-								<ul>
-									<li><a href="/main"><h4>Main Office</h4></a></li>
-									<li><a href="/makati"><h4>Makati Office</h4></a></li>
-									<li><a href="/cebu"><h4>Cebu Office</h4></a></li>
-								</ul>	
-							</div>							
-						</div>
-					  </div>
-				  </div>
+                <li><a class="color6" href="/contactUs">Contact Us</a>
+                 
                   </li>
 				<!--<li><a class="color7" href="other.html">Purchase</a></li>-->
 			</ul>

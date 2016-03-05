@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\purchaseorder;
 use App\orders;
 
+use App\Mailers\AppMailer;
 use Hash;
 use App\User;
 use DateTime;
@@ -218,7 +219,7 @@ class HomeController extends Controller{
 			return redirect("/")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
 			
 		}
-		
+			
 
 		$data['orders'] = $items;
 		return view('checkoutreview', $data);
@@ -236,7 +237,7 @@ class HomeController extends Controller{
 		$data['user'] = "";
 		return view('auth.register', $data);
 	}
-	public function postRegister(Request $request){
+	public function postRegister(Request $request, AppMailer $mailer){
 		if(isset($_POST['register'])){
 
 			$user = new User();
@@ -248,7 +249,9 @@ class HomeController extends Controller{
 			if($request->password != $request->retypePassword){
 				return redirect('/auth/register')->with('error', 'Passwords must match');
 			}
+			$user->middleName = $request->middlename;
 			$user->save();
+			 $mailer->sendEmailConfirmationTo($user);
 			return redirect('myaccount')->with('affirmRegistration', 'Successfully registered. Please login to continue');;
 		}
 	}
