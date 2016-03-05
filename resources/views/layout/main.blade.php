@@ -42,7 +42,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 				    @else
 					 <li><a href="/auth/login">Log In</a></li> 
-
 				    @endif
 				    |
 				    @if(Auth::check())
@@ -95,7 +94,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							</div>							
 						</div>
 					  </div>
-					</div>
+				  </div>
                   </li>
 				<!--<li><a class="color7" href="other.html">Purchase</a></li>-->
 			</ul>
@@ -103,9 +102,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</div>
 	   <div class="header-bottom-right">
          <div class="search">	  
-				<input type="text" name="s" class="textbox" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
+         		<form action = './searchproduct' method = 'post'>
+         		{!! csrf_field() !!}
+				<input type="text" name="search" class="textbox" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
 				<input type="submit" value="Subscribe" id="submit" name="submit">
-				<div id="response"> </div>
+				<div id="response"> 
+				</div>
+				</form>
 		 </div>
 	  <div class="tag-list">
 		<ul class="icon1 sub-icon1 profile_img">

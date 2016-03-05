@@ -15,6 +15,24 @@ use Hash;
 use App\User;
 use DateTime;
 class HomeController extends Controller{
+	public function postSearchProduct(Request $request){
+		$search = $request->search;
+		$count = products::where('productName', 'like', '%'.$search.'%')->count();
+		$message = "search result found: $count";
+		$data['products'] = products::where('productName', 'like', '%'.$search.'%')->paginate(6);
+		$request->session()->flash('affirm', $message);
+		return view('search', $data);
+
+	}
+	public function getSearchProduct(Request $request){
+		$search = $request->search;
+		$count = products::where('productName', 'like', '%'.$search.'%')->count();
+		$message = "search result found: $count";
+		$data['products'] = products::where('productName', 'like', '%'.$search.'%')->paginate(6);
+		$request->session()->flash('affirm', $message);
+		return view('search', $data);
+
+	}
 	public function getIndex(){
 		$data['cartQuantity'] = 0;
 		$data['products'] = products::orderBy('id','desc')->paginate(6);

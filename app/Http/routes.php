@@ -1,4 +1,6 @@
 <?php
+
+
 Route::get('/', [
 	'as' => 'Home',
 	
@@ -99,4 +101,11 @@ Route::post('/order/{id}', [
 	'middleware' => 'auth',
 	'uses' => 'HomeController@postOrder'
 ]);
+Route::post('/searchproduct', [
+	'uses' => 'HomeController@postSearchProduct'
+]);
+Route::get('/searchproduct', [
+	'uses' => 'HomeController@postSearchProduct'
+]);
+
 ?>
