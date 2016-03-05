@@ -102,7 +102,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</div>
 	   <div class="header-bottom-right">
          <div class="search">	  
-         		<form action = './searchproduct' method = 'post'>
+         		<form action = './searchproduct' method = 'get'>
          		{!! csrf_field() !!}
 				<input type="text" name="search" class="textbox" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
 				<input type="submit" value="Subscribe" id="submit" name="submit">

@@ -88,7 +88,7 @@
 			 </div>
 		  </div>
 		  <div class="clear"></div>
-		  			 	{!! $products->render() !!}				 			    
+		  			 	{!! $products->appends(['search' => (isset($_GET['search'])) ? $_GET['search'] : '' ])->render() !!}				 			    
 
 	</div>
 	</div>
