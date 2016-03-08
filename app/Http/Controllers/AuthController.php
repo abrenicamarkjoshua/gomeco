@@ -29,7 +29,7 @@ class AuthController extends Controller{
 				array('Invalid credentials were provided')
 			);
 		}
-		return redirect(route('/'));
+		return redirect(route('Home'));
 	}
 
 }

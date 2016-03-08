@@ -16,6 +16,12 @@ use Hash;
 use App\User;
 use DateTime;
 class HomeController extends Controller{
+	public function getActivateUser($activation){
+		$user = User::where('token', $activation)->first();
+		$user->active = 1;
+		$user->save();
+		return redirect('/')->with('affirm', 'account activated. please log in to continue');
+	}
 	public function postSearchProduct(Request $request){
 		$search = $request->search;
 		$count = products::where('productName', 'like', '%'.$search.'%')->count();
@@ -246,13 +252,15 @@ class HomeController extends Controller{
 			$user->email = $request->email;
 			$user->customer_address = $request->address;
 			$user->password = bcrypt($request->password);
+			$confirmation_code = str_random(30);
 			if($request->password != $request->retypePassword){
 				return redirect('/auth/register')->with('error', 'Passwords must match');
 			}
 			$user->middleName = $request->middlename;
+			$user->token = $confirmation_code;
 			$user->save();
 			 $mailer->sendEmailConfirmationTo($user);
-			return redirect('myaccount')->with('affirmRegistration', 'Successfully registered. Please login to continue');;
+			return redirect('myaccount')->with('affirm', 'Successfully registered. Please check your email to activate your account');;
 		}
 	}
 	public function postMyAccount(Request $request){

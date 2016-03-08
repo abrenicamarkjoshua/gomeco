@@ -1,5 +1,9 @@
 <?php
-
+Route::get('/register/confirm/{activation}', [
+	'as' => 'Home',
+	
+	'uses' => 'HomeController@getActivateUser'
+]);
 
 Route::get('/', [
 	'as' => 'Home',
@@ -11,8 +15,8 @@ Route::get('/home', [
 	'uses' => 'HomeController@getIndex'
 ]);
 // Authentication routes...
-Route::get('auth/login', 'Auth\AuthController@getLogin');
-Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('auth/login', ['uses' => 'Auth\AuthController@getLogin', 'as' => 'login']);
+Route::post('auth/login', 'AuthController@postIndex');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 Route::get('auth/register', 'HomeController@getRegister');
