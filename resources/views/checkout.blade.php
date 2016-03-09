@@ -84,6 +84,10 @@
 	            <label>First name:</label>
 	            <input class = "pure-input-1-3" type = 'text' name = 'firstname' required placeholder ='First name' />
 	        </div>
+	        <div class="pure-control-group">
+	            <label>Middle name:</label>
+	            <input class = "pure-input-1-3" type = 'text' name = 'middlename'  placeholder ='Middle name' />
+	        </div>
 	         <div class="pure-control-group">
 	            <label>Complete address:</label>
 	            <textarea class = "pure-input-1-3" name = 'address' required></textarea>

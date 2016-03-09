@@ -6,20 +6,16 @@
 	
     <fieldset>
     	@if($error != "")
-        <p style = "color:red;">{{$error}}</p>
+        <p style = "color:red;">{!! $error !!}</p>
         @endif
-        @if(isset($_SESSION['affirm']))
-        <p style ="color:green;font-size:25px">{{$_SESSION['affirm']}}</p>
-            <?php unset($_SESSION['affirm']); ?>
+        @if(session('affirm'))
+        <p style ="color:green">{!! session('affirm') !!}</p>
+            
         @endif
-        	@if (session('affirm'))
-			    <b style = "color:green;font-size:25px">{{session('affirm')}}</b>
-			    
-			@endif
-			@if (session('affirmRegistration'))
-			    <b style = "color:green;font-size:25px">{{session('affirmRegistration')}}</b>
-			    
-			@endif
+        @if(Auth::user()->active == 0)
+            <p style = "color:red;">Please check your email and  validate your account within 24 hours. Order made by invalid users are marked as false orders</p>
+        
+        @endif
         <legend>Personal information</legend>
     	
     	

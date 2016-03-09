@@ -41,6 +41,13 @@ class HomeController extends Controller{
 
 	}
 	public function getIndex(){
+		if (Auth::check() && ! Auth::user()->active) {
+            Auth::logout();
+            // return with error
+            return \Redirect::route('login')->withErrors(
+            array('Account not yet activated. Please see your email for account activation')
+            );  
+        }
 		$data['cartQuantity'] = 0;
 		$data['products'] = products::orderBy('id','desc')->paginate(6);
 		return view('home', $data);
@@ -155,31 +162,47 @@ class HomeController extends Controller{
 		$data['orders'] = $items;
 		return view('checkoutreview', $data);
 	}
-	public function postCheckoutFinal(Request $request){
+	public function postCheckoutFinal(Request $request, AppMailer $mailer){
 		if(isset($_POST['LoginAndCheckout'])){
-			 if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+			if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             	// Authentication passed...
             	//return redirect()->intended('review');
     		} else{
-        		return redirect("/checkout")->with("authentication failed");
+        		return redirect("/checkout")->with("error", "authentication failed");
     		}
 		}
 		if(isset($_POST['RegisterAccountcheckout'])){
-			$user = new User();
-			$user->lastname = $request->lastname;
-			$user->firstname = $request->firstname;
-			$user->middleName = $request->middlename;
-			$user->email = $request->email;
-			$user->customer_address = $request->address;
-			$user->name = $request->username;
-			$user->password = bcrypt($request->password);
-			$user->save();
+			
 
-			if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
+			if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             	// Authentication passed...
             	//return redirect()->intended('review');
     		} else{
-        		return redirect("/checkout")->with("authentication failed");
+    			if(User::where('name', $request->username)->count() > 0){
+    				return redirect('/checkout')->with('error', 'User name already exist');
+    			}
+    			if(User::where('email', $request->email)->count() > 0){
+    				return redirect('/checkout')->with('error', 'Email already exist');
+    			}
+	        	$user = new User();
+				$user->lastname = $request->lastname;
+				$user->firstname = $request->firstname;
+				$user->middleName = $request->middlename;
+				$user->email = $request->email;
+				$user->customer_address = $request->address;
+				$user->name = $request->username;
+				$user->password = bcrypt($request->password);
+				$user->mobileNumber = $request->mobile;
+				$user->save();
+					//return redirect("/checkout")->with("authentication failed");
+				$mailer->sendEmailConfirmationTo($user);
+				if(Auth::attempt(['email' => $user->email, 'password' => $request->password])){
+
+				}
+				else{
+					return "error";
+				}
+			
     		}
 		}
 		$data['name'] = (Auth::check()) ? Auth::user()->firstname . " " . Auth::user()->lastname : $request->name;
@@ -219,8 +242,14 @@ class HomeController extends Controller{
 			}
 			Cart::clear();
 			if(Auth::check()){
-				return redirect("/myaccount")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+				if(Auth::user()->active){
+					return redirect("/myaccount")->with('affirm', "Your order has been processed.");
+
+				} else{
+					return redirect("/myaccount")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+				}
 			}
+
 
 			return redirect("/")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
 			
