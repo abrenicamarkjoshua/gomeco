@@ -16,11 +16,25 @@ use Hash;
 use App\User;
 use DateTime;
 class HomeController extends Controller{
+	public function getResendConfirmationEmail($username, AppMailer $mailer){
+		$user = User::where('name', html_entity_decode($username))->first();
+		$user->token = str_random(30);
+		$user->save();
+		$mailer->sendEmailConfirmationTo($user);
+
+		return redirect("/auth/login")->with('message', "we've sent you an email verification link. please check your email");
+
+	}
 	public function getActivateUser($activation){
 		$user = User::where('token', $activation)->first();
 		$user->active = 1;
 		$user->save();
-		return redirect('/')->with('affirm', 'account activated. please log in to continue');
+		$purchaseOrders = purchaseorder::where('user_id', $user->id)->where('userverified', 'unverified')->get();
+		foreach($purchaseOrders as $purchaseorder){
+			$purchaseorder->userverified = "verified thru email";
+			$purchaseorder->save();
+		}
+		return redirect('/auth/login')->with('message', 'account activated. please log in to continue');
 	}
 	public function postSearchProduct(Request $request){
 		$search = $request->search;
@@ -42,10 +56,11 @@ class HomeController extends Controller{
 	}
 	public function getIndex(){
 		if (Auth::check() && ! Auth::user()->active) {
+			$username = Auth::user()->name;
             Auth::logout();
             // return with error
             return \Redirect::route('login')->withErrors(
-            array('Account not yet activated. Please see your email for account activation')
+            array('Account not yet activated. Please see your email for account activation. Or click this <a href = "/resendemailconfirmation/'.$username.'">link</a> to resend the activation email')
             );  
         }
 		$data['cartQuantity'] = 0;
@@ -131,6 +146,10 @@ class HomeController extends Controller{
 			$purchaseOrder->deadline = date('Y-m-d', $deadline);
 			if(Auth::check()){
 				$purchaseOrder->user_id = Auth::user()->id;
+				if(Auth::user()->active == 1){
+				$purchaseOrder->userverified = "Verified thru email";
+					
+				}
 			}
 			$purchaseOrder->save();
 
@@ -193,9 +212,12 @@ class HomeController extends Controller{
 				$user->name = $request->username;
 				$user->password = bcrypt($request->password);
 				$user->mobileNumber = $request->mobile;
+				$confirmation_code = str_random(30);
+				$user->token = $confirmation_code;
 				$user->save();
 					//return redirect("/checkout")->with("authentication failed");
 				$mailer->sendEmailConfirmationTo($user);
+
 				if(Auth::attempt(['email' => $user->email, 'password' => $request->password])){
 
 				}

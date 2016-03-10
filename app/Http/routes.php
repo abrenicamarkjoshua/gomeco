@@ -1,4 +1,5 @@
 <?php
+Route::get('/resendemailconfirmation/{username}', ['as' => 'resendemailconfirmation', 'uses' => 'HomeController@getResendConfirmationEmail']);
 Route::get('/register/confirm/{activation}', [
 	'as' => 'Home',
 	

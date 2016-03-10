@@ -50,7 +50,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
      <div class="clear"></div>
      </div>
 	</div>
-  
+  @if(session('message'))
+	  <div class="alert alert-info">
+	  {!! session('message') !!}
+	  </div>
+    @endif
 @yield('content')
 		<div class="footer-bottom" style = "margin-top:80px;">
 			<div class="wrap">

@@ -14,7 +14,7 @@
 							@if (count($errors) > 0)
         <ul>
             @foreach ($errors->all() as $error)
-                <li style ="color:red">{{ $error }}</li>
+                <li style ="color:red">{!! $error !!}</li>
             @endforeach
         </ul>
         @endif
@@ -28,9 +28,7 @@
 						      <input id="modlgn_passwd" required type="password" name="password" class="inputbox" size="18" autocomplete="off">
 						    </p>
 						    <div class="remember">
-							    <p id="login-form-remember">
-							      <label for="modlgn_remember"><a href="#">Forget Your Password ? </a></label>
-							   </p>
+							    
 							    <input type="submit" name="Submit" class="button" value="Login"><div class="clear"></div>
 							 </div>
 						  </fieldset>
