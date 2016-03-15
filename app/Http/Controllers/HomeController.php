@@ -16,6 +16,13 @@ use Hash;
 use App\User;
 use DateTime;
 class HomeController extends Controller{
+	public function getContactUs(){
+		return view('contactUs');
+	}
+	public function getAboutUs(){
+
+		return view('aboutUs');
+	}
 	public function getResendConfirmationEmail($username, AppMailer $mailer){
 		$user = User::where('name', html_entity_decode($username))->first();
 		$user->token = str_random(30);

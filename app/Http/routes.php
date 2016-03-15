@@ -22,42 +22,25 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 Route::get('auth/register', 'HomeController@getRegister');
 Route::post('auth/register', 'HomeController@postRegister');
-//not yet done. cebu.php
-Route::get('/cebu',[
-	'uses' =>'HomeController@getCebu'
-	]);
-
-//not yet done. makati.php
-Route::get('/makati',[
-	'uses' =>'HomeController@getMakati'
-	]);
-
-//not yet done. main.php
 Route::get('/main',[
 	'uses' =>'HomeController@getMain'
 	]);
 
-//not yet done. aboutus.php
 Route::get('/aboutUs',[
 	'uses' =>'HomeController@getAboutUs'
 	]);
-//not yet done. storage/preparation.html
+Route::get('/contactUs',[
+	'uses' =>'HomeController@getContactUs'
+	]);
 Route::get('/storage-and-preparation-equipment',[
 	'uses' =>'HomeController@getStorageAndPreparationEquipment'
 	]);
-//not yet done. cooking.php
 Route::get('/cooking-equipment',[
 	'uses' =>'HomeController@getCookingEquipment'
 	]);
-//
 Route::get('/foodService',[
 	'uses' =>'HomeController@getFoodService'
 	]);
-// //not yet done. 
-// Route::get('/register',[
-// 	'uses' =>'HomeController@getRegister'
-// 	]);
-//get item description
 Route::get('/product/{id}',[
 	'uses' =>'HomeController@getItemDescription'
 	]);
