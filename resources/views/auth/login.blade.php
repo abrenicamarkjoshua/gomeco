@@ -12,12 +12,12 @@
 						<form action="" method="post" name="login" id="login-form">
 							{!! csrf_field() !!}
 							@if (count($errors) > 0)
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li style ="color:red">{!! $error !!}</li>
-            @endforeach
-        </ul>
-        @endif
+					        <ul>
+					            @foreach ($errors->all() as $error)
+					                <li style ="color:red">{!! $error !!}</li>
+					            @endforeach
+					        </ul>
+					        @endif
 						  <fieldset class="input">
 						    <p id="login-form-username">
 						      <label for="modlgn_username">User Name</label>

@@ -15,6 +15,8 @@ use App\Mailers\AppMailer;
 use Hash;
 use App\User;
 use DateTime;
+use Validator;
+use App\audittrail;
 class HomeController extends Controller{
 	public function getContactUs(){
 		return view('contactUs');
@@ -301,18 +303,41 @@ class HomeController extends Controller{
 		$data['user'] = "";
 		return view('auth.register', $data);
 	}
+	protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|confirmed|min:6',
+        ]);
+    }
 	public function postRegister(Request $request, AppMailer $mailer){
 		if(isset($_POST['register'])){
+		
+
+			$validator = Validator::make($request->all(), [
+            'name' => 'required|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+    		'password_confirmation' => 'required|min:6'
+	        ]);
+
+	        if ($validator->fails()) {
+	            return redirect('auth/register')
+	                        ->withErrors($validator)
+	                        ->withInput();
+	        }
 
 			$user = new User();
+
 			$user->name = $request->name;
 			$user->mobileNumber = $request->mobilenumber;
 			$user->email = $request->email;
 			$user->customer_address = $request->address;
 			$user->password = bcrypt($request->password);
 			$confirmation_code = str_random(30);
-			if($request->password != $request->retypePassword){
-				return redirect('/auth/register')->with('error', 'Passwords must match');
+			if($request->password != $request->password_confirmation){
+				return redirect('/auth/register')->with('error', 'Passwords must match')->withInput();
 			}
 			$user->middleName = $request->middlename;
 			$user->token = $confirmation_code;
