@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 14, 2016 at 08:45 PM
+-- Generation Time: Mar 18, 2016 at 03:48 AM
 -- Server version: 5.5.45-cll-lve
 -- PHP Version: 5.4.31
 
@@ -19,6 +19,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `gomeco`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audittrail`
+--
+
+CREATE TABLE IF NOT EXISTS `audittrail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchaseorder_id` int(11) NOT NULL,
+  `trail` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `audittrail`
+--
+
+INSERT INTO `audittrail` (`id`, `purchaseorder_id`, `trail`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Admin updated order status to : on-delivery-process', '2016-03-18 09:01:20', '2016-03-18 09:01:20');
 
 -- --------------------------------------------------------
 
@@ -56,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
 
 --
 -- Dumping data for table `inventory`
@@ -100,7 +122,8 @@ INSERT INTO `inventory` (`id`, `product_id`, `quantity`, `created_at`, `updated_
 (35, 38, 1, '2016-03-10 07:33:32', '2016-03-10 07:33:32'),
 (36, 39, 1, '2016-03-10 07:35:31', '2016-03-10 07:35:31'),
 (37, 40, 1, '2016-03-10 07:36:28', '2016-03-10 07:36:28'),
-(38, 41, 1, '2016-03-10 07:40:48', '2016-03-10 07:40:48');
+(38, 41, 1, '2016-03-10 07:40:48', '2016-03-10 07:40:48'),
+(39, 42, 12500, '2016-03-18 01:26:08', '2016-03-18 01:26:08');
 
 -- --------------------------------------------------------
 
@@ -136,10 +159,18 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `quantity` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `amount` decimal(10,0) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `purchaseorders_id` (`purchaseorders_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `purchaseorders_id`, `productName`, `quantity`, `created_at`, `updated_at`, `amount`) VALUES
+(1, 1, 'SS Wall Shelf', 1, '2016-03-18 08:42:57', '2016-03-18 08:42:57', '1.00'),
+(2, 1, 'Dishwashing Sinktable (Tubular Bracing w partial bottomshelf)', 1, '2016-03-18 08:42:57', '2016-03-18 08:42:57', '1.00');
 
 -- --------------------------------------------------------
 
@@ -169,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `productpictures` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `productpictures`
@@ -217,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `products`
@@ -247,7 +278,8 @@ INSERT INTO `products` (`id`, `productName`, `productDesc`, `sellingprice`, `cat
 (38, 'Dishwashing Sinktable (Tubular Bracing)', 'Dishwashing Sinktable (Tubular Bracing)', '1.00', 3, 'images/Dishwashing Sinktable (Tubular Bracing).jpg', '2016-03-10 07:34:45', '2016-03-10 14:34:45'),
 (39, 'Sinktable (Island Type)', 'Sinktable (Island Type)', '1.00', 3, 'images/Sinktable (Island Type).jpg', '2016-03-10 07:35:54', '2016-03-10 14:35:54'),
 (40, 'Sinktable', 'Sinktable', '1.00', 3, 'images/Sinktable.jpg', '2016-03-10 07:36:55', '2016-03-10 14:36:55'),
-(41, 'SS Wall Shelf', 'SS Wall Shelf', '1.00', 3, 'images/SS Wall Shelf.jpg', '2016-03-10 07:41:26', '2016-03-10 14:41:26');
+(41, 'SS Wall Shelf', 'SS Wall Shelf', '1.00', 3, 'images/SS Wall Shelf.jpg', '2016-03-10 07:41:26', '2016-03-10 14:41:26'),
+(42, 'asd', 'we', '100.00', 1, '', '2016-03-18 08:26:08', '2016-03-18 08:26:08');
 
 -- --------------------------------------------------------
 
@@ -270,7 +302,14 @@ CREATE TABLE IF NOT EXISTS `purchaseorders` (
   `userverified` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `purchaseorders`
+--
+
+INSERT INTO `purchaseorders` (`id`, `created_at`, `updated_at`, `status`, `customer_name`, `customer_address`, `customer_mobile`, `customer_email`, `deadline`, `user_id`, `remarks`, `userverified`) VALUES
+(1, '2016-03-18 08:42:57', '2016-03-18 09:01:20', 'on-delivery-process', 'joshua', 'sm the grass residences unit 1717b tower 1, quezon city, philippines', '09175829479', 'abrenicamarkjoshua@gmail.com', '2016-03-25', 31, '', 'Verified thru email');
 
 -- --------------------------------------------------------
 
@@ -297,22 +336,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=33 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `customer_address`, `name`, `lastname`, `firstname`, `middleName`, `mobileNumber`, `userType`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `token`, `active`) VALUES
-(2, '', 'gomeco', 'abrenica', 'Mark Joshua', 'rivera', '09175824979', 'Admin', 'abrenicamarkjoshua@gmail2.com', '$2y$10$GBioDbxd73E9ONSELN7D8uKgehnNgJKvJzS7VtekEM3NsckbIhgpy', 'gffqPgIJ0lbFSGnb7WtUH5xcrvycohgPSrRmkqvz337ivBUdWaVtNrojI4kl', '0000-00-00 00:00:00', '2016-03-09 16:00:22', NULL, 0),
-(4, '95 bansalangin street, veterans village', 'dan joel', '', '', '', '09175824979', '', 'abrenicamarkjoshua@yahoo.com', '$2y$10$wdG1d8mGHPXejoY6K8HZkeadXPFDAYFJbp.kwtAgILueehfNWyMvS', '04DaYRmaZ3LUWTHIg40WuXvGxOIc4Q4oR4ZQmCYsj5yWUrQfcR4b2ctFVts9', '2015-11-13 05:32:35', '2015-12-06 15:39:58', NULL, 0),
-(5, 'maysan, valenzuela city', 'ryan', '', '', '', '09279492744', '', 'ryan@gmail.com', '$2y$10$IwzS9mvZk0L7mYDXi4MkW.Q7ac9vZvRtIPMkVSxMNSmlwR0fSXkq.', '4F02ZxkMZnbSteAx5MQPIjJLAhqSUVlhMjbEwDlYdBSLcv3NZko3rKXzEIkC', '2015-11-14 06:39:40', '2015-11-14 07:03:23', NULL, 0),
-(6, '44 Espiritu St. Marulas Val. City', 'Jomarie Labios', '', '', '', '09051127633', '', 'jomarielabios22@yahoo.com', '$2y$10$ekJlVgCoFF5MM0PpjsvSaO8YNsaVxvuOCemi6C359nKNpYLd92jLG', 'MeR75LEyx6U27huudnyMxP5c43QxWW6ZZnD0l2qLVcduFnft9fGbFuLnI6eS', '2015-11-14 07:10:44', '2015-11-14 07:11:58', NULL, 0),
-(7, '', 'ojit', 'abrenica', 'john joseph', 'rivera', '09175824979', 'Admin', 'abrenicajohnjoseph@yahoo.com', '$2y$10$xlr4rQm9Z.XyDceR6rNps.NC6ggHD5YYXl8Dc4pghlfHCSZhsJSOW', 'm7I1mVDvEX5PNadwl8HBQqxKxYO4fWVIRE3X0QFUIS8pLQSNZdMiLF3LvfDY', '2015-12-06 16:07:27', '2015-12-06 16:07:58', NULL, 0),
-(9, '', 'LDaisuke007', 'Labios', 'Jomarie', 'Remillo', '09051127633', 'Admin', 'jomarielabios@gmail.com', '$2y$10$KpxLXEpxDd8IGTQMzIqAjOXV0hw0qnT87.394U72XYNw6g6prnPnq', NULL, '2016-02-29 13:35:40', '2016-02-29 13:35:40', NULL, 0),
-(10, '', 'gecelann', 'alvez', 'gecel', 'ann', '0922222222222222222', 'Admin', 'gecelalvez@gmail.com', '$2y$10$qVcstsFZbwmnjhgtCtsTAeHcD.9eg1hKgIi/FVcoQEGW48yTmHhBy', NULL, '2016-02-29 13:37:26', '2016-02-29 13:37:26', NULL, 0),
-(11, '', '123', '123', '432', '123', '12321', 'Admin', '123@gmail.com', '$2y$10$HnqFpFUg5qVJqhvif4Lu6OUmNY2Cmb5o0Mc4rAUjCMaL0e0Wf2Yb6', NULL, '2016-02-29 13:38:23', '2016-02-29 13:38:23', NULL, 0),
-(27, 'sm the grass residences unit 1717b tower 1, quezon city, philippines', 'joshua', 'abrenica', 'mark joshua', 'rivera', '09175824979', '', 'abrenicamarkjoshua@gmail.com', '$2y$10$fof1BsRYcMhQKjDlyKynAuaEU.OuAGUr74p1YY.Yd7kaHU4btrNze', 'PZ6fJ3lXevS4DkVYkGRnkhTGDFHjd4LwDpvUJPCFxxqkl0HJJB2EKze7mcZy', '2016-03-10 13:14:12', '2016-03-10 13:15:04', 'nFwKd0FTn2Tttrp51vx776LKl6PPqV', 1);
+(2, '', 'gomeco', 'abrenica', 'Mark Joshua', 'rivera', '09175824979', 'Admin', 'abrenicamarkjoshua@gmail2.com', '$2y$10$GBioDbxd73E9ONSELN7D8uKgehnNgJKvJzS7VtekEM3NsckbIhgpy', 'Qi9QJpeLDwlIaqNV2cueXcvxVClI5SKfEbyhetKgd1xGbpSmVPotX0nmHIKm', '0000-00-00 00:00:00', '2016-03-18 08:25:34', NULL, 0),
+(31, 'sm the grass residences unit 1717b tower 1, quezon city, philippines', 'joshua', '', '', 'rivera', '09175829479', '', 'abrenicamarkjoshua@gmail.com', '$2y$10$gCzyEp/96K3IIwf0Cu0nxuiWc1hJqk1dwoYeFZdZJmEwYvj1LIP3.', 'LSGeyFFwSokoGFwocbuyajFVcrh4bNsviFZmdEby29GYYJL9c04kNXSrAsWG', '2016-03-18 14:54:54', '2016-03-18 15:43:19', 'cfe7ehKtpa38Blnb3ukVPAPe88Ak8M', 1),
+(32, '#44 Espiritu St. Marulas Val. City', 'ldaisuke', '', '', 'remillo', '09051127633', '', 'jomarielabios@gmail.com', '$2y$10$x50TTCUsdQsh.o9i6sop4.gg3VnUXw6iwB/Tpk2urK3bMGjpqJqvO', 'QO16P6fJ8zyxhCDmdIGMmSSoTToGy9Rnhfjk356bi7PDYyGzVbhActH7dq0W', '2016-03-18 15:42:46', '2016-03-18 16:06:12', 'wjglOs3s6BIcaZUvCnlksIeInZGrnc', 1);
 
 -- --------------------------------------------------------
 
