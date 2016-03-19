@@ -331,6 +331,9 @@ class HomeController extends Controller{
 			$user = new User();
 
 			$user->name = $request->name;
+			$user->lastname = $request->lastname;
+			$user->firstname = $request->firstname;
+			$request->middlename = $request->middlename;
 			$user->mobileNumber = $request->mobilenumber;
 			$user->email = $request->email;
 			$user->customer_address = $request->address;
@@ -343,7 +346,7 @@ class HomeController extends Controller{
 			$user->token = $confirmation_code;
 			$user->save();
 			 $mailer->sendEmailConfirmationTo($user);
-			return redirect('myaccount')->with('affirm', 'Successfully registered. Please check your email to activate your account');;
+			return redirect('auth/login')->with('affirm', 'Successfully registered. Please check your email to activate your account');;
 		}
 	}
 	public function postMyAccount(Request $request){

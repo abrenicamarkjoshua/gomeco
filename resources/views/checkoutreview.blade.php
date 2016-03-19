@@ -6,10 +6,15 @@
 	</center>
 	<div style = "width:1000px;margin:auto;">
 	<fieldset>
-		<legend>Shipping and Billing address</legend>
+		<legend>Shipping and Billing address </legend>
 		<div class="pure-control-group">
-            <label for="name">name:</label>
-			{{$name}}
+            <label for="name">name:</label> 
+			{{ ( Auth::check() ) ? Auth::user()->firstname . " " . Auth::user()->lastname : $name}}
+			@if(Auth::check())
+			{{Auth::User()->firstname}}
+			@else
+			not logged in
+			@endif
     	</div>
 		<div class="pure-control-group">
             <label for="name">address:</label>
@@ -37,7 +42,7 @@
 	<div class="pure-control-group">
             <label for="name">Total:</label>
            
-			₱{{formatMoney(Cart::getSubTotal(), true)}}
+			<font style = "font-size:12px;"> ₱{{formatMoney(Cart::getSubTotal(), true)}} </font>
     	</div>
 	</fieldset>
 	<form action = '' method = 'post' style = "margin-top:50px;margin-bottom:50px;">
