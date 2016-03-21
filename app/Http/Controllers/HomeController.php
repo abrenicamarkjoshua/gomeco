@@ -155,7 +155,8 @@ class HomeController extends Controller{
 			$purchaseOrder->deadline = date('Y-m-d', $deadline);
 			if(Auth::check()){
 				$purchaseOrder->user_id = Auth::user()->id;
-				if(Auth::user()->active == 1){
+				$user = User::where('id', Auth::user()->id)->first();
+				if($user->active == 1){
 				$purchaseOrder->userverified = "Verified thru email";
 					
 				}
@@ -274,10 +275,10 @@ class HomeController extends Controller{
 			Cart::clear();
 			if(Auth::check()){
 				if(Auth::user()->active){
-					return redirect("/myaccount")->with('affirm', "Your order has been processed.");
+					return redirect("/myorders")->with('affirm', "Your order has been processed.");
 
 				} else{
-					return redirect("/myaccount")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
+					return redirect("/myorders")->with('affirm', "Your order has been processed. Please keep your lines up, we will contact you.");
 				}
 			}
 

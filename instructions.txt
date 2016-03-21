@@ -1,0 +1,12 @@
+1. copy directories into C:/xampp/htdocs
+2. the folders of the system are: "gomeco" and "gomeco inventory"
+3. copy "httpd-vhosts.conf" inside gomeco folder and paste it in "C:/xampp/apache/conf/extra"
+4. go to browser and type: "gomeco.localhost"
+5. for the inventory system. go to browser and type: "gomecoinventory.localhost"
+6. time to import the database:
+7. go to phpmyadmin. (localhost/phpmyadmin)
+8. in sql, type:
+CREATE DATABASE gomeco;
+USE gomeco;
+9. import gomeco.sql from gomeco folder
+10. you may now use the system.

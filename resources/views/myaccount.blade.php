@@ -37,7 +37,7 @@
         <div class="pure-control-group">
             <label for="name">Middle name:</label>
             
-            <input required type = 'text' name = 'middlename' value = '{{$user->middlename}}'/>
+            <input required type = 'text' name = 'middlename' value = '{{$user->middleName}}'/>
         </div>
  		<div class="pure-control-group">
             <label for="name">Mobile number:</label>
