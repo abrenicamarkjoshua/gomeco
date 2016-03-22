@@ -20,7 +20,7 @@ class AppMailer
      *
      * @var string
      */
-    protected $from = 'abrenicamarkjoshua@gmail.com';
+    protected $from = 'freelancer.abrenicamarkjoshua@gmail.com';
 
     /**
      * The recipient of the email.
